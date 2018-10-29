@@ -1,4 +1,5 @@
 import { TodoApp } from './todos';
+import { TransactionApp } from './transactions';
 
 export interface Enthusiasm {
   languageName: string;
@@ -10,6 +11,6 @@ export interface AppState {
   enthusiasm: Enthusiasm;
   planner: {};
   todos: TodoApp;
-  // TODO: Change this
+  transactions: TransactionApp;
   auth: any;
 }
