@@ -31,6 +31,7 @@
     "styleguide:build": "styleguidist build"
   },
   "devDependencies": {
+    "@types/chartjs": "^0.0.31",
     "@types/enzyme": "^3.1.14",
     "@types/enzyme-adapter-react-16": "^1.0.3",
     "@types/jest": "^23.3.2",
@@ -48,6 +49,7 @@
     "@types/styled-components": "^3.0.1",
     "@types/uuid": "^3.4.4",
     "@types/webpack-env": "^1.13.6",
+    "@types/chart.js": "^2.7.40",
     "@types/yup": "^0.24.9",
     "enzyme": "^3.6.0",
     "enzyme-adapter-react-16": "^1.5.0",

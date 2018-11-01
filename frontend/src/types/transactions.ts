@@ -8,14 +8,25 @@ export interface Transaction {
   description: string;
   amount: number;
 }
+export interface TransactionActionPayload {
+  id: number;
+  date?: Date;
+  type?: string;
+  category?: string;
+  description?: string;
+  amount?: number;
+}
 
-interface TransactionActionPayload {
-  id?: number;
+export interface CreateTransactionPayload {
   date: Date;
   type: string;
   category: string;
-  description?: string;
+  description: string;
   amount: number;
+}
+
+export interface TransactionApp {
+  [id: number]: Transaction;
 }
 
 export interface FetchTransactions {
@@ -25,12 +36,12 @@ export interface FetchTransactions {
 
 export interface CreateTransactions {
   type: constants.CREATE_TRANSACTIONS;
-  payload: Transaction;
+  payload: CreateTransactionPayload;
 }
 
 export interface DeleteTransactions {
   type: constants.DELETE_TRANSACTIONS;
-  payload: number[];
+  payload: TransactionActionPayload;
 }
 
 export interface UpdateTransactions {
@@ -38,23 +49,8 @@ export interface UpdateTransactions {
   payload: TransactionActionPayload;
 }
 
-export interface AddTransactionForm {
-  type: constants.ADD_TRANSACTION_FORM;
-  payload: TransactionActionPayload;
-}
-export interface RemoveTransactionForm {
-  type: constants.REMOVE_TRANSACTION_FORM;
-  payload: number;
-}
-
 export type TransactionAction =
   | FetchTransactions
   | CreateTransactions
   | DeleteTransactions
   | UpdateTransactions
-  | AddTransactionForm
-  | RemoveTransactionForm;
-
-export interface TransactionApp {
-  [id: number]: Transaction;
-}
