@@ -5,26 +5,21 @@ interface Props {
   transactions: any;
 }
 
+interface TransactionFormItem {
+  date: { value: any, touched: boolean, required: boolean };
+  type: { value: string, touched: boolean, required: boolean };
+  category: { value: string, touched: boolean, required: boolean };
+  description: { value: string, touched: boolean, required: boolean };
+  amount: { value: number, touched: boolean, required: boolean };
+}
+
 interface State {
-  count: number;
-  formItemCount: number[];
-  formValues: object[];
-  // | [
-  //     {
-  //       date: {value: Date, touched: boolean, required: boolean};
-  //       type: {value: string, touched: boolean, required: boolean};
-  //       category: {value: string, touched: boolean, required: boolean};
-  //       description: {value: string, touched: boolean, required: boolean};
-  //       amount: {value: number, touched: boolean, required: boolean};
-  //     }
-  //   ];
+  transactions: TransactionFormItem[];
 }
 
 export default class TransactionForm extends React.Component<Props, State> {
   state: State = {
-    count: 1,
-    formItemCount: [0],
-    formValues: [
+    transactions: [
       {
         date: { value: new Date(), touched: false, required: true },
         type: { value: 'deposit', touched: false, required: true },
@@ -35,60 +30,52 @@ export default class TransactionForm extends React.Component<Props, State> {
     ],
   };
 
-  addTransactionFormItem = async () => {
-    let formValuesClone: object[] = [...this.state.formValues];
-    formValuesClone.push({
+  addTransactionFormItem = () => {
+    const transactionsClone = ({
       date: { value: new Date(), touched: false, required: true },
       type: { value: 'deposit', touched: false, required: true },
       category: { value: 'food', touched: false, required: true },
       description: { value: '', touched: false, required: true },
       amount: { value: 0, touched: false, required: true },
     });
-    formValuesClone = formValuesClone;
-    await this.setState({ formValues: formValuesClone });
-    await this.setState({ count: ++this.state.count });
-    await this.setState({
-      formItemCount: [...Array(this.state.count)].fill(0),
-    });
+    this.setState({
+      transactions: [...this.state.transactions, transactionsClone],
+    })
   };
 
-  deleteTransactionForm(event: any, selectedItem: number) {
+  deleteTransactionFormItem(event: any, selectedItem: number) {
     event.preventDefault();
-    const formItemCountClone: number[] = this.state.formItemCount.filter(
-      (_, i: number) => i !== selectedItem
-    );
-    const formValuesClone: object[] = this.state.formValues.filter(
+    const transactionsClone: TransactionFormItem[] = [...this.state.transactions].filter(
       (_, i: number) => i !== selectedItem
     );
     this.setState({
-      formItemCount: formItemCountClone,
-      count: --this.state.count,
-      formValues: formValuesClone,
+      transactions: transactionsClone,
     });
   }
 
   handleChange(event: any, index: number) {
-    const formValuesClone = [...this.state.formValues];
-    formValuesClone[index][event.target.name].touched = true;
-    formValuesClone[index][event.target.name].value = event.target.value;
-    this.setState({ formValues: formValuesClone });
+    const transactionsClone = [...this.state.transactions];
+    transactionsClone[index][event.target.name].touched = true;
+    transactionsClone[index][event.target.name].value = event.target.value;
+    this.setState({ transactions: transactionsClone });
   }
 
-  handleSubmit(values: object[]) {
-    const formValues: object[] = [];
-    const refactoredValues: { [name: string]: string | number | Date } = {};
+  handleSubmit(values: TransactionFormItem[]) {
+    const transactions: object[] = [];
+
     for (const item of values) {
+      const refactoredValues: { [name: string]: any } = {}
       Object.keys(item).forEach(name => {
         refactoredValues[name] = item[name].value;
       });
-      formValues.push(Object.assign({}, refactoredValues));
+      transactions.push(refactoredValues);
     }
-    //TODO: execute action method here with formValues
-    console.log(formValues);
+    // TODO: execute action method here with transactions
+    console.log(transactions);
   }
 
   render() {
-    console.log(this.state.formValues);
+    console.log(this.state.transactions);
     return (
       <div>
         <button
@@ -98,19 +85,19 @@ export default class TransactionForm extends React.Component<Props, State> {
           Add more
         </button>
         <hr />
-        {this.state.formItemCount.map((_, i) => (
-          <form key={i}>
-            <div>
+        <form>
+          {this.state.transactions.map((_, i) => (
+            <div key={i}>
               <div className="form-group">
                 <div className="row">
                   <div className="col">
                     <label htmlFor="transactionDate">Date</label>
                     <input
-                      type="date"
+                      type="text"
                       className="form-control"
                       id="transactionDate"
                       name="date"
-                      value={this.state.formValues[i]['date'].value}
+                      value={this.state.transactions[i].date.value}
                       onChange={event => this.handleChange(event, i)}
                     />
                   </div>
@@ -120,7 +107,7 @@ export default class TransactionForm extends React.Component<Props, State> {
                       className="form-control"
                       id="transactionType"
                       name="type"
-                      value={this.state.formValues[i]['type'].value}
+                      value={this.state.transactions[i].type.value}
                       onChange={event => this.handleChange(event, i)}
                     >
                       <option>Deposit</option>
@@ -133,7 +120,7 @@ export default class TransactionForm extends React.Component<Props, State> {
                       className="form-control"
                       id="category"
                       name="category"
-                      value={this.state.formValues[i]['category'].value}
+                      value={this.state.transactions[i].category.value}
                       onChange={event => this.handleChange(event, i)}
                     >
                       <option>Food</option>
@@ -151,7 +138,7 @@ export default class TransactionForm extends React.Component<Props, State> {
                       name="description"
                       className="form-control"
                       id="description"
-                      value={this.state.formValues[i]['description'].value}
+                      value={this.state.transactions[i].description.value}
                       onChange={event => this.handleChange(event, i)}
                     />
                   </div>
@@ -162,15 +149,15 @@ export default class TransactionForm extends React.Component<Props, State> {
                       name="amount"
                       className="form-control"
                       id="amount"
-                      value={this.state.formValues[i]['amount'].value}
+                      value={this.state.transactions[i].amount.value}
                       onChange={event => this.handleChange(event, i)}
                     />
                   </div>
                 </div>
               </div>
-              {this.state.count === 1 ? null : (
+              {this.state.transactions.length === 1 ? undefined : (
                 <button
-                  onClick={event => this.deleteTransactionForm(event, i)}
+                  onClick={event => this.deleteTransactionFormItem(event, i)}
                   className="btn btn-danger btn-lg btn-block"
                 >
                   Remove
@@ -178,11 +165,11 @@ export default class TransactionForm extends React.Component<Props, State> {
               )}
               <hr />
             </div>
-          </form>
-        ))}
+          ))}
+        </form>
         <button
           className="btn btn-primary btn-lg btn-block"
-          onClick={() => this.handleSubmit(this.state.formValues)}
+          onClick={() => this.handleSubmit(this.state.transactions)}
         >
           Submit
         </button>
