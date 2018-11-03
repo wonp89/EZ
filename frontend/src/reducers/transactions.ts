@@ -1,47 +1,35 @@
 import {
-  TransactionApp,
-  TransactionAction,
-  // TransactionActionPayload,
+  TransactionAction
 } from '../types/transactions';
 import {
-  // FETCH_TRANSACTIONS,
+  FETCH_TRANSACTIONS,
   CREATE_TRANSACTIONS,
-  // DELETE_TRANSACTIONS,
-  // UPDATE_TRANSACTIONS,
+  UPDATE_TRANSACTIONS,
+  DELETE_TRANSACTIONS
 } from '../constants';
 // import * as R from 'ramda';
 
-const initialFormState: TransactionApp = [];
-
 export default (
   state = [],
-  formState = initialFormState,
   action: TransactionAction
-): object[] => {
+): any => {
   switch (action.type) {
+    case FETCH_TRANSACTIONS: {
+      console.log('FETCH_TRANSACTIONS: ', action.payload)
+      return [...state, ...action.payload]
+    }
     case CREATE_TRANSACTIONS: {
-      // return action.payload;
+      return [...state, ...action.payload]
+      console.log('CREATE_TRANSACTIONS: ', action.payload)
+    }
+    case UPDATE_TRANSACTIONS: {
+      console.log('UPDATE_TRANSACTIONS: ', action.payload)
+    }
+    case DELETE_TRANSACTIONS: {
+      console.log('DELETE_TRANSACTIONS: ', action.payload)
     }
   }
   return state;
 };
 
-
-// immutable reference
-// const payload = [{id: 1, des: 'dish'}, {id: 2, des: 'laundary'}, {id: 3, des: 'coding'}]
-
-// function create(obj) {
-//   return [...payload, ...obj]
-// }
-// create([{id: 4, des: 'shopping'}, {id: 5, des: 'dance'}])
-
-// function remove(uids) {
-//   return payload.filter(item => !uids.includes(item.id));
-// }
-// remove([1, 3])
-
-// function update(uid) {
-//   return payload.map(item => item.id === uid ? {...item, des: 'shopping'} : item)
-// }
-// pr(1)
 

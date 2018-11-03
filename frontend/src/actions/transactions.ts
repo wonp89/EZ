@@ -4,8 +4,8 @@ import {
   FetchTransactions,
   CreateTransactions,
   UpdateTransactions,
-  DeleteTransactions
-  TransactionActionPayload,
+  DeleteTransactions,
+  TransactionActionPayload
 } from '../types/transactions';
 
 export const fetchTransactions = (
@@ -18,31 +18,26 @@ export const fetchTransactions = (
 };
 
 export const createTransactions = (
-  date: Date,
-  type: string,
-  category: string,
-  description: string,
-  amount: number
-): CreateTransactions => ({
-  type: constants.CREATE_TRANSACTIONS,
-  payload: { date, type, category, description, amount },
-});
+  transactionsCreatedArray: Transaction[]): CreateTransactions => ({
+    type: constants.CREATE_TRANSACTIONS,
+    payload: transactionsCreatedArray,
+  });
 
 export const updateTransactions = (
-  id: number,
-  date: Date,
-  type: string,
-  category: string,
-  description: string,
-  amount: number
-): UpdateTransactions => ({
-  type: constants.UPDATE_TRANSACTIONS,
-  payload: { id, date, type, category, description, amount },
-});
+  { id,
+    date,
+    type,
+    category,
+    description,
+    amount
+  }: TransactionActionPayload): UpdateTransactions => ({
+    type: constants.UPDATE_TRANSACTIONS,
+    payload: { id, date, type, category, description, amount },
+  });
 
 export const deleteTransactions = (
-  id: number
+  transactioinsDeletedArray: TransactionActionPayload[]
 ): DeleteTransactions => ({
   type: constants.DELETE_TRANSACTIONS,
-  payload: { id },
+  payload: transactioinsDeletedArray,
 });

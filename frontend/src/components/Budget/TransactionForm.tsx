@@ -1,23 +1,19 @@
 import * as React from 'react';
-// import * as R from 'ramda';
+import { connect } from 'react-redux';
+import { bindActionCreators, Dispatch } from 'redux';
+import { createTransactions } from '../../actions/transactions';
+import { AppState } from '../../types';
+import { Transaction, TransactionFormItem } from '../../types/transactions';
 
 interface Props {
-  transactions: any;
-}
-
-interface TransactionFormItem {
-  date: { value: any, touched: boolean, required: boolean };
-  type: { value: string, touched: boolean, required: boolean };
-  category: { value: string, touched: boolean, required: boolean };
-  description: { value: string, touched: boolean, required: boolean };
-  amount: { value: number, touched: boolean, required: boolean };
+  createTransactions: (transactionValue: Transaction[]) => void;
 }
 
 interface State {
   transactions: TransactionFormItem[];
 }
 
-export default class TransactionForm extends React.Component<Props, State> {
+class TransactionForm extends React.Component<Props, State> {
   state: State = {
     transactions: [
       {
@@ -32,7 +28,7 @@ export default class TransactionForm extends React.Component<Props, State> {
 
   addTransactionFormItem = () => {
     const transactionsClone = ({
-      date: { value: new Date(), touched: false, required: true },
+      date: { value: '', touched: false, required: true },
       type: { value: 'deposit', touched: false, required: true },
       category: { value: 'food', touched: false, required: true },
       description: { value: '', touched: false, required: true },
@@ -54,24 +50,35 @@ export default class TransactionForm extends React.Component<Props, State> {
   }
 
   handleChange(event: any, index: number) {
+    this.checkTransactionFormValues();
     const transactionsClone = [...this.state.transactions];
     transactionsClone[index][event.target.name].touched = true;
     transactionsClone[index][event.target.name].value = event.target.value;
     this.setState({ transactions: transactionsClone });
   }
 
-  handleSubmit(values: TransactionFormItem[]) {
-    const transactions: object[] = [];
+  checkTransactionFormValues() {
+    let isValue: boolean = false;
+    for (const item of this.state.transactions) {
+      Object.keys(item).forEach(name => {
+        if (item[name].value === '' || item[name].value === 0 || typeof item[name].value === 'object') {
+          isValue = true;
+        }
+      });
+    }
+    return isValue;
+  }
 
+  handleSubmit(values: TransactionFormItem[]) {
+    const transactionFormItem: Transaction[] = [];
     for (const item of values) {
-      const refactoredValues: { [name: string]: any } = {}
+      const refactoredValues: any = {} // { [name: string]: any }
       Object.keys(item).forEach(name => {
         refactoredValues[name] = item[name].value;
       });
-      transactions.push(refactoredValues);
+      transactionFormItem.push(refactoredValues);
     }
-    // TODO: execute action method here with transactions
-    console.log(transactions);
+    this.props.createTransactions(transactionFormItem)
   }
 
   render() {
@@ -93,7 +100,7 @@ export default class TransactionForm extends React.Component<Props, State> {
                   <div className="col">
                     <label htmlFor="transactionDate">Date</label>
                     <input
-                      type="text"
+                      type="date"
                       className="form-control"
                       id="transactionDate"
                       name="date"
@@ -170,6 +177,7 @@ export default class TransactionForm extends React.Component<Props, State> {
         <button
           className="btn btn-primary btn-lg btn-block"
           onClick={() => this.handleSubmit(this.state.transactions)}
+          disabled={this.checkTransactionFormValues()}
         >
           Submit
         </button>
@@ -177,3 +185,14 @@ export default class TransactionForm extends React.Component<Props, State> {
     );
   }
 }
+
+const mapStateToProps = (state: AppState) => ({
+  transactions: state.transactions,
+});
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return bindActionCreators({ createTransactions }, dispatch);
+};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TransactionForm);
