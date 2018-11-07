@@ -61,9 +61,7 @@ class TransactionForm extends React.Component<Props, State> {
     let isValue: boolean = false;
     for (const item of this.state.transactions) {
       Object.keys(item).forEach(name => {
-        if (item[name].value === '' || item[name].value === 0 || typeof item[name].value === 'object') {
-          isValue = true;
-        }
+        if (item[name].value === '' || item[name].value === 0 || typeof item[name].value === 'object') { isValue = true; }
       });
     }
     return isValue;
@@ -82,7 +80,6 @@ class TransactionForm extends React.Component<Props, State> {
   }
 
   render() {
-    console.log(this.state.transactions);
     return (
       <div>
         <button

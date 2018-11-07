@@ -1,11 +1,13 @@
 import * as constants from '../constants';
 import {
   Transaction,
+  TransactionApp,
   FetchTransactions,
   CreateTransactions,
+  CreateTransactionsSuccess,
   UpdateTransactions,
   DeleteTransactions,
-  TransactionActionPayload
+  TransactionActionPayload,
 } from '../types/transactions';
 
 export const fetchTransactions = (
@@ -18,22 +20,30 @@ export const fetchTransactions = (
 };
 
 export const createTransactions = (
-  transactionsCreatedArray: Transaction[]): CreateTransactions => ({
-    type: constants.CREATE_TRANSACTIONS,
-    payload: transactionsCreatedArray,
-  });
+  transactionsCreatedArray: Transaction[]
+): CreateTransactions => ({
+  type: constants.CREATE_TRANSACTIONS_REQUEST,
+  payload: transactionsCreatedArray,
+});
 
-export const updateTransactions = (
-  { id,
-    date,
-    type,
-    category,
-    description,
-    amount
-  }: TransactionActionPayload): UpdateTransactions => ({
-    type: constants.UPDATE_TRANSACTIONS,
-    payload: { id, date, type, category, description, amount },
-  });
+export const createTransactionsSuccess = (
+  transactionResponse: TransactionApp
+): CreateTransactionsSuccess => ({
+  type: constants.CREATE_TRANSACTIONS_SUCCESS,
+  payload: transactionResponse,
+});
+
+export const updateTransactions = ({
+  id,
+  date,
+  type,
+  category,
+  description,
+  amount,
+}: TransactionActionPayload): UpdateTransactions => ({
+  type: constants.UPDATE_TRANSACTIONS,
+  payload: { id, date, type, category, description, amount },
+});
 
 export const deleteTransactions = (
   transactioinsDeletedArray: TransactionActionPayload[]

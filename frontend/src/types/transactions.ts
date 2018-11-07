@@ -8,6 +8,7 @@ export interface Transaction {
   description: string;
   amount: number;
 }
+
 export interface TransactionActionPayload {
   id: number;
   date?: Date;
@@ -27,8 +28,13 @@ export interface FetchTransactions {
 }
 
 export interface CreateTransactions {
-  type: constants.CREATE_TRANSACTIONS;
+  type: constants.CREATE_TRANSACTIONS_REQUEST;
   payload: Transaction[];
+}
+
+export interface CreateTransactionsSuccess {
+  type: constants.CREATE_TRANSACTIONS_SUCCESS;
+  payload: TransactionApp;
 }
 
 export interface DeleteTransactions {
@@ -42,15 +48,16 @@ export interface UpdateTransactions {
 }
 
 export interface TransactionFormItem {
-  date: { value: any, touched: boolean, required: boolean };
-  type: { value: string, touched: boolean, required: boolean };
-  category: { value: string, touched: boolean, required: boolean };
-  description: { value: string, touched: boolean, required: boolean };
-  amount: { value: number, touched: boolean, required: boolean };
+  date: { value: any; touched: boolean; required: boolean };
+  type: { value: string; touched: boolean; required: boolean };
+  category: { value: string; touched: boolean; required: boolean };
+  description: { value: string; touched: boolean; required: boolean };
+  amount: { value: number; touched: boolean; required: boolean };
 }
 
 export type TransactionAction =
   | FetchTransactions
   | CreateTransactions
+  | CreateTransactionsSuccess
   | DeleteTransactions
-  | UpdateTransactions
+  | UpdateTransactions;
